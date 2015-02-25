@@ -26,6 +26,11 @@
             this.type = 'android';
         }
 
+        // If app sent a redirect with certain words, change the cookie to reflect that app is installed already
+        if ( $(location).attr('search') === this.options.hideQuery ) {
+          this.setCookie('sb-installed','true',this.options.daysReminder);
+        }
+
         // Don't show banner if device isn't iOS or Android, website is loaded in app or user dismissed banner
         if (!this.type || standalone || this.getCookie('sb-closed') || this.getCookie('sb-installed')) {
             return;
@@ -258,7 +263,8 @@
         layer: false, // Display as overlay layer or slide down the page
         iOSUniversalApp: true, // If the iOS App is a universal app for both iPad and iPhone, display Smart Banner to iPad users, too.
         appendToSelector: 'body', //Append the banner to a specific selector
-		pushSelector: 'html' // What element is going to push the site content down; this is where the banner append animation will start.
+        hideQuery: '?app=true', // Specify which query word will be used for hiding the banner, useful when opening a non-webview from native app
+        pushSelector: 'html' // What element is going to push the site content down; this is where the banner append animation will start.
     };
 
     $.smartbanner.Constructor = SmartBanner;
